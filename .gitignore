@@ -1,0 +1,10 @@
+#text file
+*.txt
+
+#vscode settint
+.vscode
+
+#execute file
+*.out
+*.o
+*.exe
