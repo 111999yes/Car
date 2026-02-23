@@ -47,5 +47,13 @@ int main(){
 
 //=================================================
 
+    cout << "節點\t距離\t前驅節點" << endl;
+    for(int i = 0; i < numberOfNode; ++i){
+        cout << i << "\t";
+        if(distance[i] == INT_MAX) cout << "不可達";
+        else cout << distance[i];
+        cout << "\t" << lastPoint[i] << endl;
+    }
+
     return 0;
 }
