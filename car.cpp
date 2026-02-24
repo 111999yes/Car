@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <algorithm>
 using namespace std;
 
 int main(){
@@ -21,8 +22,8 @@ int main(){
 
 
 //=======================INIT=======================
-    int startPoint;
-    cin >> startPoint;
+    int startPoint, endPoint;
+    cin >> startPoint >> endPoint;
     vector<int> distance(numberOfNode, -1);
     vector<int> lastPoint(numberOfNode, -1);
     queue<int> q;
@@ -43,6 +44,15 @@ int main(){
             }
         }
     }
+//=======================ROUTE=======================
+    vector<int> route;
+    int curPoint = endPoint;
+    while(curPoint != -1){
+        route.push_back(curPoint);
+        curPoint = lastPoint[curPoint];
+    }
+    reverse(route.begin(), route.end());
+//=======================ROUTE=======================
 
 //=================================================
 
@@ -52,6 +62,14 @@ int main(){
         if(distance[i] == -1) cout << "不可達";
         else cout << distance[i];
         cout << "\t" << lastPoint[i] << endl;
+    }
+
+    cout << "\nroute : \n";
+    if(distance[endPoint] == -1) cout << "\tno possible route\n";
+    else{
+        for(int i = 0; i < route.size(); ++i){
+            cout << route[i] << ((i == (route.size() - 1)) ? "\n" : " -> ");
+        }
     }
 
     return 0;
