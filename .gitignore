@@ -8,3 +8,6 @@
 *.out
 *.o
 *.exe
+
+#test file
+test.cpp

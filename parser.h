@@ -5,7 +5,7 @@
 #include <cstring>
 #include <sstream>
 
-void ParseEdge(std::string input, std::vector<std::set<int>>& graph){
+void ParseEdge(const std::string& input, std::vector<std::set<int>>& graph){
     size_t idx = input.find(':');
     if(idx == std::string::npos){
         throw std::invalid_argument("Error: Invalid input format");
@@ -21,9 +21,15 @@ void ParseEdge(std::string input, std::vector<std::set<int>>& graph){
     while(true){
         int pos = back.find(',', start);
         int to = 0;
-        if(pos == std::string::npos){
-            to = std::stoi(back.substr(start));
-            graph[from].insert(to);
+        try{
+            if(pos == std::string::npos){
+                to = std::stoi(back.substr(start));
+                graph[from].insert(to);
+                graph[to].insert(from);
+                break;
+            }
+        }
+        catch(const std::exception& e){
             break;
         }
         to = std::stoi(back.substr(start, pos - start));

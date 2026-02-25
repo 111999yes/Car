@@ -6,7 +6,7 @@
 #include <fstream>
 #include <algorithm>
 
-void FileInput(int& numberOfNode, int& numberOfEdge, std::vector<std::vector<int>>& graph){
+void FileInput(int& numberOfNode, int& numberOfEdge, std::vector<std::set<int>>& graph){
     std::cout << "Enter the file name : ";
     std::string fileName;
     std::cin >> fileName;
@@ -19,25 +19,25 @@ void FileInput(int& numberOfNode, int& numberOfEdge, std::vector<std::vector<int
     if(numberOfNode <= 0 || numberOfEdge < 0)
         throw std::invalid_argument("Error: Number of node and edge should both be postive integer");
     std::pair<int, int> edge;
-    graph.assign(numberOfNode, std::vector<int>());
+    graph.assign(numberOfNode, std::set<int>());
     for(int i = 0; i < numberOfEdge; ++i){
         if(!(file >> edge.first >> edge.second))
             throw std::runtime_error("Error: Incomplete edge data.");
         if(edge.first >= numberOfNode || edge.first < 0 || edge.second >= numberOfNode || edge.second < 0)
             throw std::invalid_argument("Error: Node index out of bounds in file.");
-        graph[edge.first].push_back(edge.second);
-        graph[edge.second].push_back(edge.first);
+        graph[edge.first].insert(edge.second);
+        graph[edge.second].insert(edge.first);
     }
 }
 
-void Input(int& numberOfNode, int& numberOfEdge, std::vector<std::vector<int>>& graph){
+void Input(int& numberOfNode, int& numberOfEdge, std::vector<std::set<int>>& graph){
     std::cout << "Enter number of nodes and edges : ";
     while(!(std::cin >> numberOfNode >> numberOfEdge) || numberOfNode <= 0 || numberOfEdge < 0){
         std::cout << "Error: Invalid input. Please enter two postive integers : ";
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
-    graph.assign(numberOfNode, std::vector<int> ());
+    graph.assign(numberOfNode, std::set<int> ());
     std::pair<int, int> edge;
     for(int i = 0; i < numberOfEdge; ++i){
         std::cin >> edge.first >> edge.second;
@@ -46,12 +46,12 @@ void Input(int& numberOfNode, int& numberOfEdge, std::vector<std::vector<int>>& 
             --i;
             continue;
         }
-        graph[edge.first].push_back(edge.second);
-        graph[edge.second].push_back(edge.first);
+        graph[edge.first].insert(edge.second);
+        graph[edge.second].insert(edge.first);
     }
 }
 
-void BFS(const std::vector<std::vector<int>>& graph, std::vector<int>& distance, std::vector<int>& lastPoint, int startPoint){
+void BFS(const std::vector<std::set<int>>& graph, std::vector<int>& distance, std::vector<int>& lastPoint, int startPoint){
     distance[startPoint] = 0;
     std::queue<int> q;
     q.push(startPoint);

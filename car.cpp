@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <set>
 #include <queue>
 #include <algorithm>
 #include <fstream>
@@ -19,7 +20,7 @@ int main(){
 
     int numberOfNode = 0;
     int numberOfEdge = 0;
-    vector<vector<int>> graph;
+    vector<set<int>> graph;
     
     if(!isFile){
         Input(numberOfNode, numberOfEdge, graph);
