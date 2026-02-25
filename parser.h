@@ -23,7 +23,10 @@ void ParseEdge(std::string input, std::vector<std::vector<int>>& graph){
             graph[from].push_back(std::stoi(back.substr(start)));
             break;
         }
-        graph[from].push_back(std::stoi(back.substr(start, pos - start)));
+        int to = std::stoi(back.substr(start, pos - start));
+        graph[from].push_back(to);
+        graph[to].push_back(from);
+        
         start = pos + 1;
     }
 }
