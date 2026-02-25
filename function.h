@@ -5,45 +5,44 @@
 #include <limits>
 #include <fstream>
 #include <algorithm>
-using namespace std;
 
-void FileInput(int& numberOfNode, int& numberOfEdge, vector<vector<int>>& graph){
-    cout << "Enter the file name : ";
-    string fileName;
-    cin >> fileName;
-    ifstream file;
-    file.open(fileName, ios::in);
+void FileInput(int& numberOfNode, int& numberOfEdge, std::vector<std::vector<int>>& graph){
+    std::cout << "Enter the file name : ";
+    std::string fileName;
+    std::cin >> fileName;
+    std::ifstream file;
+    file.open(fileName, std::ios::in);
     if(file.fail())
-        throw runtime_error("Error: Can not open file.");
+        throw std::runtime_error("Error: Can not open file.");
     if(!(file >> numberOfNode >> numberOfEdge))
-        throw runtime_error("Error: Invalid header format.");
+        throw std::runtime_error("Error: Invalid header format.");
     if(numberOfNode <= 0 || numberOfEdge < 0)
-        throw invalid_argument("Error: Number of node and edge should both be postive integer");
-    pair<int, int> edge;
-    graph.assign(numberOfNode, vector<int>());
+        throw std::invalid_argument("Error: Number of node and edge should both be postive integer");
+    std::pair<int, int> edge;
+    graph.assign(numberOfNode, std::vector<int>());
     for(int i = 0; i < numberOfEdge; ++i){
         if(!(file >> edge.first >> edge.second))
-            throw runtime_error("Error: Incomplete edge data.");
+            throw std::runtime_error("Error: Incomplete edge data.");
         if(edge.first >= numberOfNode || edge.first < 0 || edge.second >= numberOfNode || edge.second < 0)
-            throw invalid_argument("Error: Node index out of bounds in file.");
+            throw std::invalid_argument("Error: Node index out of bounds in file.");
         graph[edge.first].push_back(edge.second);
         graph[edge.second].push_back(edge.first);
     }
 }
 
-void Input(int& numberOfNode, int& numberOfEdge, vector<vector<int>>& graph){
-    cout << "Enter number of nodes and edges : ";
-    while(!(cin >> numberOfNode >> numberOfEdge) || numberOfNode <= 0 || numberOfEdge < 0){
-        cout << "Error: Invalid input. Please enter two postive integers : ";
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+void Input(int& numberOfNode, int& numberOfEdge, std::vector<std::vector<int>>& graph){
+    std::cout << "Enter number of nodes and edges : ";
+    while(!(std::cin >> numberOfNode >> numberOfEdge) || numberOfNode <= 0 || numberOfEdge < 0){
+        std::cout << "Error: Invalid input. Please enter two postive integers : ";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
-    graph.assign(numberOfNode, vector<int> ());
-    pair<int, int> edge;
+    graph.assign(numberOfNode, std::vector<int> ());
+    std::pair<int, int> edge;
     for(int i = 0; i < numberOfEdge; ++i){
-        cin >> edge.first >> edge.second;
+        std::cin >> edge.first >> edge.second;
         if(edge.first >= numberOfNode || edge.first < 0 || edge.second >= numberOfNode || edge.second < 0){
-            cout << "Error: Invalid edge index, please retry : ";
+            std::cout << "Error: Invalid edge index, please retry : ";
             --i;
             continue;
         }
@@ -52,9 +51,9 @@ void Input(int& numberOfNode, int& numberOfEdge, vector<vector<int>>& graph){
     }
 }
 
-void BFS(const vector<vector<int>>& graph, vector<int>& distance, vector<int>& lastPoint, int startPoint){
+void BFS(const std::vector<std::vector<int>>& graph, std::vector<int>& distance, std::vector<int>& lastPoint, int startPoint){
     distance[startPoint] = 0;
-    queue<int> q;
+    std::queue<int> q;
     q.push(startPoint);
 
     int curPoint;
@@ -73,7 +72,7 @@ void BFS(const vector<vector<int>>& graph, vector<int>& distance, vector<int>& l
     }
 }
 
-void FindRoute(vector<int>& route, const vector<int>& distance, const vector<int>& lastPoint, int endPoint){
+void FindRoute(std::vector<int>& route, const std::vector<int>& distance, const std::vector<int>& lastPoint, int endPoint){
     int curPoint = endPoint;
     if(distance[endPoint] == -1) return;
     while(curPoint != -1){
