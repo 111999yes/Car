@@ -2,56 +2,71 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <fstream>
+#include <limits>
 using namespace std;
+
+#include "function.h"
 
 int main(){
 
 //=======================INPUT=======================
-    int numberOfNode;
-    int numberOfEdge;
-    cin >> numberOfNode >> numberOfEdge;
-    vector<vector<int>> node;
-    for(int i = 0; i < numberOfNode; ++i) node.push_back({});
-    for(int i = 0; i < numberOfEdge; ++i){
-        pair<int, int> edge;
-        cin >> edge.first >> edge.second;
-        node[edge.first].push_back(edge.second);
-        node[edge.second].push_back(edge.first);
+    bool isFile = false;
+    string input;
+    cout << "File IO or not [y/n] : ";
+    cin >> input;
+    if(input == "y" || input == "Y") isFile = true;
+
+    int numberOfNode = 0;
+    int numberOfEdge = 0;
+    vector<vector<int>> graph;
+    
+    if(!isFile){
+        Input(numberOfNode, numberOfEdge, graph);
+    }
+    else{
+        while(true){
+            try{
+                FileInput(numberOfNode, numberOfEdge, graph);
+                break;
+            }
+            catch(const exception& e){
+                cout << e.what() << "\n";
+            }
+        }
     }
 //===================================================
 
 
 //=======================INIT=======================
     int startPoint, endPoint;
-    cin >> startPoint >> endPoint;
+    cout << "Enter start and end point: ";
+    while(true){
+        try{
+            if(!(cin >> startPoint >> endPoint)){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                throw runtime_error("Error : Invalid input");
+            }
+            if(startPoint >= numberOfNode || startPoint < 0 || endPoint >= numberOfNode || endPoint < 0)
+                throw invalid_argument("Error : Invalid index of start point or end point");
+            break;
+        }
+        catch(const exception& e){
+            cout << e.what() << ", please retry : ";
+        }
+    }
     vector<int> distance(numberOfNode, -1);
     vector<int> lastPoint(numberOfNode, -1);
-    queue<int> q;
-
-    distance[startPoint] = 0;
-    q.push(startPoint);
 //==================================================
 
 //=======================BFS=======================
-    while(!q.empty()){
-        int curPoint = q.front();
-        q.pop();
-        for(int i = 0; i < node[curPoint].size(); ++i){
-            if(distance[node[curPoint][i]] == -1){
-                q.push(node[curPoint][i]);
-                distance[node[curPoint][i]] = distance[curPoint] + 1;
-                lastPoint[node[curPoint][i]] = curPoint;
-            }
-        }
-    }
+    BFS(graph, distance, lastPoint, startPoint);
+//=================================================
+
 //=======================ROUTE=======================
     vector<int> route;
-    int curPoint = endPoint;
-    while(curPoint != -1){
-        route.push_back(curPoint);
-        curPoint = lastPoint[curPoint];
-    }
-    reverse(route.begin(), route.end());
+    FindRoute(route, distance, lastPoint, endPoint);
 //=======================ROUTE=======================
 
 //=================================================
@@ -67,7 +82,7 @@ int main(){
     cout << "\nroute : \n";
     if(distance[endPoint] == -1) cout << "\tno possible route\n";
     else{
-        for(int i = 0; i < route.size(); ++i){
+        for(size_t i = 0; i < route.size(); ++i){
             cout << route[i] << ((i == (route.size() - 1)) ? "\n" : " -> ");
         }
     }
