@@ -1,10 +1,11 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <set>
 #include <cstring>
 #include <sstream>
 
-void ParseEdge(std::string input, std::vector<std::vector<int>>& graph){
+void ParseEdge(std::string input, std::vector<std::set<int>>& graph){
     size_t idx = input.find(':');
     if(idx == std::string::npos){
         throw std::invalid_argument("Error: Invalid input format");
@@ -19,14 +20,16 @@ void ParseEdge(std::string input, std::vector<std::vector<int>>& graph){
     int start = 0;
     while(true){
         int pos = back.find(',', start);
+        int to = 0;
         if(pos == std::string::npos){
-            graph[from].push_back(std::stoi(back.substr(start)));
+            to = std::stoi(back.substr(start));
+            graph[from].insert(to);
             break;
         }
-        int to = std::stoi(back.substr(start, pos - start));
-        graph[from].push_back(to);
-        graph[to].push_back(from);
-        
+        to = std::stoi(back.substr(start, pos - start));
+        graph[from].insert(to);
+        graph[to].insert(from);
+
         start = pos + 1;
     }
 }
