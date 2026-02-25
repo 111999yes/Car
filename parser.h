@@ -15,7 +15,7 @@ void ParseEdge(const std::string& input, std::vector<std::set<int>>& graph){
 
     int from = std::stoi(front);
     if(from >= graph.size())
-        throw std::invalid_argument("Error: Invalid start point of the edge");
+        throw std::out_of_range("Error: Invalid start point of the edge");
     
     int start = 0;
     while(true){
@@ -24,12 +24,14 @@ void ParseEdge(const std::string& input, std::vector<std::set<int>>& graph){
         try{
             if(pos == std::string::npos){
                 to = std::stoi(back.substr(start));
+                if(to >= graph.size())
+                    throw std::out_of_range("Error: Invalid end point of the edge");
                 graph[from].insert(to);
                 graph[to].insert(from);
                 break;
             }
         }
-        catch(const std::exception& e){
+        catch(const invalid_argument& e){
             break;
         }
         to = std::stoi(back.substr(start, pos - start));

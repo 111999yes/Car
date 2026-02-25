@@ -19,16 +19,15 @@ int main(){
     if(input == "y" || input == "Y") isFile = true;
 
     int numberOfNode = 0;
-    int numberOfEdge = 0;
     vector<set<int>> graph;
     
     if(!isFile){
-        Input(numberOfNode, numberOfEdge, graph);
+        Input(numberOfNode, graph);
     }
     else{
         while(true){
             try{
-                FileInput(numberOfNode, numberOfEdge, graph);
+                FileInput(numberOfNode, graph);
                 break;
             }
             catch(const exception& e){
