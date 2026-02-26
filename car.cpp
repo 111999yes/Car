@@ -22,7 +22,15 @@ int main(){
     vector<set<int>> graph;
     
     if(!isFile){
-        Input(numberOfNode, graph);
+        while(true){
+            try{
+                Input(numberOfNode, graph);
+                break;
+            }
+            catch(const runtime_error& e){
+                cout << e.what() << ", please retry\n";
+            }
+        }
     }
     else{
         while(true){
@@ -31,7 +39,7 @@ int main(){
                 break;
             }
             catch(const exception& e){
-                cout << e.what() << "\n";
+                cout << e.what() << ", please retry\n";
             }
         }
     }

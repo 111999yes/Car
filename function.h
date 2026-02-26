@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <set>
 #include <queue>
 #include <limits>
 #include <fstream>
@@ -21,10 +22,10 @@ void FileInput(int& numberOfNode, std::vector<std::set<int>>& graph){
     if(numberOfNode <= 0)
         throw std::invalid_argument("Error: Number of node and edge should both be postive integer");
     std::string input;
+    file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     graph.assign(numberOfNode, std::set<int>());
-    for(int i = 0; i < numberOfNode; ++i){
-        if(!(file >> input))
-            throw std::runtime_error("Error: Incomplete edge data.");
+    while(std::getline(file, input)){
+        if(input == "Q" || input == "q") break;
         ParseEdge(input, graph);
     }
 }
@@ -38,9 +39,11 @@ void Input(int& numberOfNode, std::vector<std::set<int>>& graph){
     }
     graph.assign(numberOfNode, std::set<int> ());
     std::string input;
-    for(int i = 0; i < numberOfNode; ++i){
-        if(!(std::cin >> input))
-            throw std::runtime_error("Error: Invalid input");
+    std::cout << "Please Enter edges (enter \"q\" to exit): \n";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    while(true){
+        std::getline(std::cin, input);
+        if(input == "Q" || input == "q") break;
         ParseEdge(input, graph);
     }
 }
