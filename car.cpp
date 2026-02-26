@@ -27,7 +27,7 @@ int main(){
                 Input(numberOfNode, graph);
                 break;
             }
-            catch(const runtime_error& e){
+            catch(const exception& e){
                 cout << e.what() << ", please retry\n";
             }
         }
