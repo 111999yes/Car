@@ -66,7 +66,27 @@ int main(){
     }
     vector<int> distance(numberOfNode, -1);
     vector<int> lastPoint(numberOfNode, -1);
+    
 //==================================================
+
+//=======================SCORE=======================
+    vector<int> score(numberOfNode, 0);
+    string inputScore;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    cout << "Enter the score of each node (default score = 0 and enter \"q\" to exit): \n";
+    while(true){
+        getline(cin, inputScore);
+        if(inputScore == "q" || inputScore == "Q") break;
+        else{
+            try{
+                ParseScore(score, inputScore);
+            }
+            catch(const exception& e){
+                cout << e.what() << ", please retry : ";
+            }
+        }
+    }
+//===================================================
 
 //=======================BFS=======================
     BFS(graph, distance, lastPoint, startPoint);
@@ -93,6 +113,11 @@ int main(){
         for(size_t i = 0; i < route.size(); ++i){
             cout << route[i] << ((i == (route.size() - 1)) ? "\n" : " -> ");
         }
+    }
+
+    cout << "\nscore : \n";
+    for(int i = 0; i < score.size(); ++i){
+        cout << i << " : " << score[i] << endl;
     }
 
     return 0;
