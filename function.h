@@ -60,10 +60,10 @@ void BFS(const std::vector<std::set<Edge>>& graph, std::vector<int>& distance, s
         q.pop();
 
         for(auto adjacentPoint : graph[curPoint]){
-            if(distance[adjacentPoint.end] == -1){
-                q.push(adjacentPoint.end);
-                distance[adjacentPoint.end] = distance[curPoint] + 1;
-                lastPoint[adjacentPoint.end] = curPoint;
+            if(distance[adjacentPoint.GetTerminal()] == -1){
+                q.push(adjacentPoint.GetTerminal());
+                distance[adjacentPoint.GetTerminal()] = distance[curPoint] + 1;
+                lastPoint[adjacentPoint.GetTerminal()] = curPoint;
             }
         }
     }
