@@ -4,5 +4,6 @@ enum class Facing{
     NORTH,
     EAST,
     SOUTH,
-    WEST
+    WEST,
+    UNDIFINED
 };

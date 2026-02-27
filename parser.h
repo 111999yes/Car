@@ -5,6 +5,16 @@
 #include <cstring>
 #include <sstream>
 
+#include "enum.h"
+
+void Upper(std::string& s){
+    for(auto i : s){
+        if(i >= 'a' && i <= 'z'){
+            i = i - 'a' + 'A';
+        }
+    }
+}
+
 void ParseEdge(const std::string& input, std::vector<std::set<int>>& graph){
     size_t idx = input.find(':');
     if(idx == std::string::npos){
@@ -53,4 +63,13 @@ void ParseScore(std::vector<int>& score, std::string& input){
     if(std::stoi(node) >= score.size() || std::stoi(node) < 0)
         throw std::out_of_range("Error: Invalid index of node");
     score[std::stoi(node)] = std::stoi(point);
+}
+
+Facing ParseStringToFacing(std::string& s){
+    Upper(s);
+    if(s == "NORTH") return Facing::NORTH;
+    if(s == "EAST") return Facing::EAST;
+    if(s == "SOUTH") return Facing::SOUTH;
+    if(s == "WEST") return Facing::WEST;
+    return Facing::UNDIFINED;
 }
