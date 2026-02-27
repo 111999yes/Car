@@ -6,20 +6,26 @@
 #include <sstream>
 
 #include "enum.h"
+#include "edge.h"
+
+void Upper(std::string&);
+void ParseEdge(const std::string&, std::vector<std::set<Edge>>&);
+void ParseScore(std::vector<int>&, std::string&);
+std::pair<int, Facing> ParseSingleEdge(std::string);
+Facing ParseStringToFacing(std::string);
 
 void Upper(std::string& s){
-    for(auto i : s){
+    for(auto &i : s){
         if(i >= 'a' && i <= 'z'){
             i = i - 'a' + 'A';
         }
     }
 }
 
-void ParseEdge(const std::string& input, std::vector<std::set<int>>& graph){
+void ParseEdge(const std::string& input, std::vector<std::set<Edge>>& graph){
     size_t idx = input.find(':');
-    if(idx == std::string::npos){
+    if(idx == std::string::npos)
         throw std::invalid_argument("Error: Invalid input format");
-    }
     std::string front = input.substr(0, idx);
     std::string back = input.substr(idx + 1);
 
@@ -30,25 +36,33 @@ void ParseEdge(const std::string& input, std::vector<std::set<int>>& graph){
     int start = 0;
     while(true){
         int pos = back.find(',', start);
+        std::pair<int, Facing> edgeData;
         int to = 0;
         if(pos == std::string::npos){
+            //TODO
             try{
-                to = std::stoi(back.substr(start));
+                edgeData = ParseSingleEdge(back.substr(start));//TODO : change to into edgeData.first
+                to = edgeData.first;
                 if(to >= graph.size())
                     throw std::out_of_range("Error: Invalid end point of the edge");
-                graph[from].insert(to);
-                graph[to].insert(from);
+                Edge a(to, edgeData.second);
+                graph[from].insert(a);
+                Edge ac(from, GetOppositeDirection(edgeData.second));
+                graph[to].insert(ac);
                 break;
             }
-            catch(const invalid_argument& e){
+            catch(const std::invalid_argument& e){
                 break;
             }
         }
-        to = std::stoi(back.substr(start, pos - start));
+        edgeData = ParseSingleEdge(back.substr(start, pos - start));
+        to = edgeData.first;
         if(to >= graph.size())
             throw std::out_of_range("Error: Invalid end point of the edge");
-        graph[from].insert(to);
-        graph[to].insert(from);
+        Edge a(to, edgeData.second);
+        graph[from].insert(a);
+        Edge ac(from, GetOppositeDirection(edgeData.second));
+        graph[to].insert(ac);
 
         start = pos + 1;
     }
@@ -65,11 +79,25 @@ void ParseScore(std::vector<int>& score, std::string& input){
     score[std::stoi(node)] = std::stoi(point);
 }
 
-Facing ParseStringToFacing(std::string& s){
+pair<int, Facing> ParseSingleEdge(std::string s){
+    std::pair<int, Facing> result;
+    size_t idx = s.find('(');
+    if(idx == std::string::npos)
+            throw std::invalid_argument("Error: Invalid input format");
+    result.first = std::stoi(s.substr(0, idx));
+    s.pop_back();
+    Facing relPos = ParseStringToFacing(s.substr(idx + 1));
+    if(relPos == Facing::UNDEFINED)
+        throw std::invalid_argument("Error: Undifined direction");
+    result.second = relPos;
+    return result;
+}
+
+Facing ParseStringToFacing(std::string s){
     Upper(s);
     if(s == "NORTH") return Facing::NORTH;
     if(s == "EAST") return Facing::EAST;
     if(s == "SOUTH") return Facing::SOUTH;
     if(s == "WEST") return Facing::WEST;
-    return Facing::UNDIFINED;
+    return Facing::UNDEFINED;
 }

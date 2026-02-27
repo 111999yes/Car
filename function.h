@@ -9,7 +9,7 @@
 
 #include "parser.h"
 
-void FileInput(int& numberOfNode, std::vector<std::set<int>>& graph){
+void FileInput(int& numberOfNode, std::vector<std::set<Edge>>& graph){
     std::cout << "Enter the file name : ";
     std::string fileName;
     std::cin >> fileName;
@@ -23,21 +23,21 @@ void FileInput(int& numberOfNode, std::vector<std::set<int>>& graph){
         throw std::invalid_argument("Error: Number of node and edge should both be postive integer");
     std::string input;
     file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    graph.assign(numberOfNode, std::set<int>());
+    graph.assign(numberOfNode, std::set<Edge>());
     while(std::getline(file, input)){
         if(input == "Q" || input == "q") break;
         ParseEdge(input, graph);
     }
 }
 
-void Input(int& numberOfNode, std::vector<std::set<int>>& graph){
+void Input(int& numberOfNode, std::vector<std::set<Edge>>& graph){
     std::cout << "Enter number of nodes : ";
     while(!(std::cin >> numberOfNode) || numberOfNode <= 0){
         std::cout << "Error: Invalid input. Please enter one postive integers : ";
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
-    graph.assign(numberOfNode, std::set<int> ());
+    graph.assign(numberOfNode, std::set<Edge> ());
     std::string input;
     std::cout << "Please Enter edges (enter \"q\" to exit): \n";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -48,7 +48,7 @@ void Input(int& numberOfNode, std::vector<std::set<int>>& graph){
     }
 }
 
-void BFS(const std::vector<std::set<int>>& graph, std::vector<int>& distance, std::vector<int>& lastPoint, int startPoint){
+void BFS(const std::vector<std::set<Edge>>& graph, std::vector<int>& distance, std::vector<int>& lastPoint, int startPoint){
     distance[startPoint] = 0;
     std::queue<int> q;
     q.push(startPoint);
@@ -59,11 +59,11 @@ void BFS(const std::vector<std::set<int>>& graph, std::vector<int>& distance, st
         curPoint = q.front();
         q.pop();
 
-        for(int adjacentPoint : graph[curPoint]){
-            if(distance[adjacentPoint] == -1){
-                q.push(adjacentPoint);
-                distance[adjacentPoint] = distance[curPoint] + 1;
-                lastPoint[adjacentPoint] = curPoint;
+        for(auto adjacentPoint : graph[curPoint]){
+            if(distance[adjacentPoint.end] == -1){
+                q.push(adjacentPoint.end);
+                distance[adjacentPoint.end] = distance[curPoint] + 1;
+                lastPoint[adjacentPoint.end] = curPoint;
             }
         }
     }

@@ -8,6 +8,7 @@
 using namespace std;
 
 #include "function.h"
+#include "edge.h"
 
 int main(){
 
@@ -19,7 +20,7 @@ int main(){
     if(input == "y" || input == "Y") isFile = true;
 
     int numberOfNode = 0;
-    vector<set<int>> graph;
+    vector<set<Edge>> graph;
     
     if(!isFile){
         while(true){
