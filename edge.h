@@ -23,7 +23,7 @@ public:
         return relativePosition;
     }
     
-    friend ostream& operator<<(ostream& os, const Edge& edge){
+    friend std::ostream& operator<<(std::ostream& os, const Edge& edge){
         os << edge.terminal << " (" << ParseFacingToString(edge.relativePosition) << ")";
         return os;
     }
