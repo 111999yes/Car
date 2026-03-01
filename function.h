@@ -9,7 +9,7 @@
 
 #include "parser.h"
 
-void FileInput(int& numberOfNode, std::vector<std::set<Edge>>& graph){
+void FileInput(int& numberOfNode, std::vector<Node>& graph){
     std::cout << "Enter the file name : ";
     std::string fileName;
     std::cin >> fileName;
@@ -23,21 +23,21 @@ void FileInput(int& numberOfNode, std::vector<std::set<Edge>>& graph){
         throw std::invalid_argument("Error: Number of node and edge should both be postive integer");
     std::string input;
     file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    graph.assign(numberOfNode, std::set<Edge>());
+    graph.assign(numberOfNode, Node());
     while(std::getline(file, input)){
         if(input == "Q" || input == "q") break;
         ParseEdge(input, graph);
     }
 }
 
-void Input(int& numberOfNode, std::vector<std::set<Edge>>& graph){
+void Input(int& numberOfNode, std::vector<Node>& graph){
     std::cout << "Enter number of nodes : ";
     while(!(std::cin >> numberOfNode) || numberOfNode <= 0){
         std::cout << "Error: Invalid input. Please enter one postive integers : ";
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
-    graph.assign(numberOfNode, std::set<Edge> ());
+    graph.assign(numberOfNode, Node());
     std::string input;
     std::cout << "Please Enter edges (enter \"q\" to exit): \n";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -48,7 +48,7 @@ void Input(int& numberOfNode, std::vector<std::set<Edge>>& graph){
     }
 }
 
-void BFS(const std::vector<std::set<Edge>>& graph, std::vector<int>& distance, std::vector<int>& lastPoint, int startPoint){
+void BFS(const std::vector<Node>& graph, std::vector<int>& distance, std::vector<int>& lastPoint, int startPoint){
     distance[startPoint] = 0;
     std::queue<int> q;
     q.push(startPoint);
@@ -59,7 +59,7 @@ void BFS(const std::vector<std::set<Edge>>& graph, std::vector<int>& distance, s
         curPoint = q.front();
         q.pop();
 
-        for(auto adjacentPoint : graph[curPoint]){
+        for(auto adjacentPoint : graph[curPoint].adjacentEdge){
             if(distance[adjacentPoint.GetTerminal()] == -1){
                 q.push(adjacentPoint.GetTerminal());
                 distance[adjacentPoint.GetTerminal()] = distance[curPoint] + 1;

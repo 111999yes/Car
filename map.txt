@@ -1,0 +1,5 @@
+5
+0:1(north),2(south)
+1:2(east),3(west)
+3:4(west)
+q

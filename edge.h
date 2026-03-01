@@ -23,6 +23,10 @@ public:
         return relativePosition;
     }
     
+    friend ostream& operator<<(ostream& os, const Edge& edge){
+        os << edge.terminal << " (" << ParseFacingToString(edge.relativePosition) << ")";
+        return os;
+    }
     
 private:
     int terminal;
@@ -35,9 +39,8 @@ public:
     Node() {}
 
     void Append(const Edge& e){
-        adjacentEdge.push_back(e);
+        adjacentEdge.insert(e);
     }
 
-private:
-    vector<Edge> adjacentEdge;
+    std::set<Edge> adjacentEdge;
 };

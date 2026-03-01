@@ -20,7 +20,7 @@ int main(){
     if(input == "y" || input == "Y") isFile = true;
 
     int numberOfNode = 0;
-    vector<set<Edge>> graph;
+    vector<Node> graph;
     
     if(!isFile){
         while(true){
@@ -119,6 +119,15 @@ int main(){
     cout << "\nscore : \n";
     for(int i = 0; i < score.size(); ++i){
         cout << i << " : " << score[i] << endl;
+    }
+
+    cout << "\n==================\n";
+    for(int i = 0; i < graph.size(); ++i){
+        cout << i << " : ";
+        for(auto edge : graph[i].adjacentEdge){
+            cout << edge << " ";
+        }
+        cout << endl;
     }
 
     return 0;
