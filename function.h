@@ -59,11 +59,37 @@ void BFS(const std::vector<Node>& graph, std::vector<int>& distance, std::vector
         curPoint = q.front();
         q.pop();
 
-        for(auto adjacentPoint : graph[curPoint].adjacentEdge){
-            if(distance[adjacentPoint.GetTerminal()] == -1){
-                q.push(adjacentPoint.GetTerminal());
-                distance[adjacentPoint.GetTerminal()] = distance[curPoint] + 1;
-                lastPoint[adjacentPoint.GetTerminal()] = curPoint;
+        for(auto& adjacentEdge : graph[curPoint].adjacentEdge){
+            int neighbor = adjacentEdge.GetTerminal();
+            if(distance[neighbor] == -1){
+                q.push(neighbor);
+                distance[neighbor] = distance[curPoint] + 1;
+                lastPoint[neighbor] = curPoint;
+            }
+        }
+    }
+}
+
+void BFS_AllRoute(const std::vector<Node>& graph, std::vector<int>& distance, std::vector<std::set<int>>& lastPoint, int startPoint){
+    distance[startPoint] = 0;
+    std::queue<int> q;
+    q.push(startPoint);
+
+    int curPoint;
+    
+    while(!q.empty()){
+        curPoint = q.front();
+        q.pop();
+
+        for(auto& adjacentEdge : graph[curPoint].adjacentEdge){
+            int neighbor = adjacentEdge.GetTerminal();
+            if(distance[neighbor] == -1){
+                distance[neighbor] = distance[curPoint] + 1;
+                lastPoint[neighbor].insert(curPoint);
+                q.push(neighbor);
+            }
+            else if(distance[neighbor] == (distance[curPoint] + 1)){
+                lastPoint[neighbor].insert(curPoint);
             }
         }
     }
@@ -77,4 +103,20 @@ void FindRoute(std::vector<int>& route, const std::vector<int>& distance, const 
         curPoint = lastPoint[curPoint];
     }
     reverse(route.begin(), route.end());
+}
+
+void FindAllRoute(int curPoint, int startPoint, const std::vector<std::set<int>>& lastPoint, const std::vector<int>& distance, std::vector<int>& curRoute, std::vector<std::vector<int>>& allRoute){
+    if(distance[curPoint] == -1) return;
+    if(curPoint == startPoint){
+        std::vector<int> path = curRoute;
+        std::reverse(path.begin(), path.end());
+        allRoute.push_back(path);
+        return;
+    }
+    
+    for(int prev : lastPoint[curPoint]){
+        curRoute.push_back(prev);
+        FindAllRoute(prev, startPoint, lastPoint, distance, curRoute, allRoute);
+        curRoute.pop_back();
+    }
 }

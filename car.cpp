@@ -67,6 +67,9 @@ int main(){
     }
     vector<int> distance(numberOfNode, -1);
     vector<int> lastPoint(numberOfNode, -1);
+
+    vector<int> distance2(numberOfNode, -1);
+    vector<set<int>> lastPoint2(numberOfNode, set<int> ());
     
 //==================================================
 
@@ -91,11 +94,21 @@ int main(){
 
 //=======================BFS=======================
     BFS(graph, distance, lastPoint, startPoint);
+
+    BFS_AllRoute(graph, distance2, lastPoint2, startPoint);
 //=================================================
 
 //=======================ROUTE=======================
     vector<int> route;
     FindRoute(route, distance, lastPoint, endPoint);
+
+    vector<int> curRoute;
+    vector<vector<int>> allRoute;
+
+    if(distance[endPoint] != -1){
+        curRoute.push_back(endPoint);
+        FindAllRoute(endPoint, startPoint, lastPoint2, distance2, curRoute, allRoute);
+    }
 //=======================ROUTE=======================
 
 //=================================================
@@ -128,6 +141,20 @@ int main(){
             cout << edge << " ";
         }
         cout << endl;
+    }
+
+    cout << "\n=================\n";
+    cout << "\nAll shortest routes: \n";
+    if (allRoute.empty()) {
+        cout << "\tNo possible route\n";
+    } else {
+        for (const auto& path : allRoute) {
+            cout << "\t";
+            for (size_t i = 0; i < path.size(); ++i) {
+                cout << path[i] << (i == path.size() - 1 ? "" : " -> ");
+            }
+            cout << endl;
+        }
     }
 
     return 0;
